@@ -50,11 +50,10 @@ public class Main {
 
     //MODE DEBUG
     private static void start() {
-        //new A_ANFR_Downloader();
+        new A_ANFR_Downloader();
         A_Generateur_ANFR gen = new A_Generateur_ANFR("");  // Passe 1
-        //new B_Generateur_ANFR_Diff();
+        new B_Generateur_ANFR_Diff();
         new A_Generateur_ANFR(gen.dbFile);  // Passe 2
-        //new B_Generateur_ANFR_Diff();
     }
 
 

@@ -5,13 +5,12 @@ Il faut manuellement récupérer et placer le fichier SUP_ANTENNE.txt disponible
 
 Diffusion/Usage/Modifications librement autorisés à condition de citer la source et publier les modifications/améliorations
 
-Usage
-
-./Generateur_ANFR.sh anfr
+Usage<br />
+./Generateur_ANFR.sh anfr<br />
 Téléchargement + traitement + analyse des différences 
 
-./Generateur_ANFR.sh anfr-local
+./Generateur_ANFR.sh anfr-local<br />
 Traitement + analyse des différences. Nécéssite au préalable d'avoir manuellement téléchargé l'open-data et placé le fichier (qui doit être nommé ANFR.csv) dans le dossier /input
 
-./Generateur_ANFR.sh diff-only
+./Generateur_ANFR.sh diff-only<br />
 Analyse des différences uniquement

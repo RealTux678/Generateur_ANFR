@@ -6,6 +6,7 @@ Il faut manuellement récupérer et placer le fichier SUP_ANTENNE.txt disponible
 Diffusion/Usage/Modifications librement autorisés à condition de citer la source et publier les modifications/améliorations
 
 Usage
+
 ./Generateur_ANFR.sh anfr
 Téléchargement + traitement + analyse des différences 
 

@@ -26,4 +26,4 @@ La base utilisée par l'appli se trouve dans /SQL/ANFR_SQLite.db (à compresser 
 
 
 ## Carte HTML
-Les icônes de la carte sont dans le dossier html/asstes/images/ et doivent au préalable être colorées/personnalisées.
+Les icônes de la carte sont dans le dossier html/assets/images/ et doivent au préalable être colorées/personnalisées.

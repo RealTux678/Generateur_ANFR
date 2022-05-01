@@ -23,3 +23,7 @@ Analyse des différences uniquement
 Le fichier carto des différences, à utiliser avec Leaflet, se trouve dans /Generated/diff.js<br />
 Chaque base générée se trouve dans /SQL/ANFR/yyyy-Sww_version.db<br />
 La base utilisée par l'appli se trouve dans /SQL/ANFR_SQLite.db (à compresser au format XZ)
+
+
+## Carte HTML
+Les icônes de la carte sont dans le dossier html/asstes/images/ et doivent au préalable être colorées/personnalisées.

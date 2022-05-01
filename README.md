@@ -5,6 +5,10 @@ Il faut manuellement récupérer et placer le fichier SUP_ANTENNE.txt disponible
 
 Diffusion/Usage/Modifications librement autorisés à condition de citer la source et publier les modifications/améliorations
 
+Nécessite Java 8 minimum. Compiler avec la commande :
+```
+javac Main
+```
 Usage<br />
 ./Generateur_ANFR.sh anfr<br />
 Téléchargement + traitement + analyse des différences 
@@ -14,3 +18,8 @@ Traitement + analyse des différences. Nécéssite au préalable d'avoir manuell
 
 ./Generateur_ANFR.sh diff-only<br />
 Analyse des différences uniquement
+
+
+Le fichier carto des différences, à utiliser avec Leaflet, se trouve dans /Generated/diff.js<br />
+Chaque base générée se trouve dans /SQL/ANFR/yyyy-Sww_version.db<br />
+La base utilisée par l'appli se trouve dans /SQL/ANFR_SQLite.db (à compresser au format XZ)

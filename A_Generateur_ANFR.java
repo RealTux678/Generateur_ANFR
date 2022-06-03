@@ -375,11 +375,13 @@ public class A_Generateur_ANFR {
                             anfrData = anfrAdresse1 + " " + anfrAdresse2 + "(" + anfrAdresseLieu + ") " + cPostal + " ";  //l'espace de fin est déjà dans le champ adresse2, si pas vide
                         }
 
-                        systeme = systeme.replaceAll("[^\\d.]", "");  //garder que la fréquence
+                        systeme = systeme.replace("5G NR ", "");
+                        systeme = systeme.replaceAll("[^\\d.]", "");  //garder uniquement les caractères numériques
 
                         String[] tok = tokens[SERVICE].split("T");    //supprimer le 'T00:00:00'
                         String service = tok[0];
 
+                        systeme = systeme.replace("5G NR ", "");
                         anfrData = anfrData.replace("'", "''");  //escape single quote before SQL insert !
 
                         // insert SQL

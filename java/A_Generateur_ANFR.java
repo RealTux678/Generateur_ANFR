@@ -93,6 +93,7 @@ public class A_Generateur_ANFR {
                 readAnfr("BPT", "BPT", true);
                 readAnfr("DAU", "DAUPHIN TELECOM", true);
                 readAnfr("DIGI", "DIGICEL", true);
+                readAnfr("FREE", "FREE CARAIBES", true);
                 readAnfr("GLOB", "GLOBALTEL", true);
                 readAnfr("GOPT", "Gouv Nelle Calédonie (OPT)", true);
                 readAnfr("MAOR", "MAORE MOBILE", true);

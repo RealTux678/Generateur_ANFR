@@ -90,7 +90,7 @@ public class A_Generateur_ANFR {
                 readAnfr("20810", "SFR", false);
                 readAnfr("20815", "FREE MOBILE", false);
                 readAnfr("20820", "BOUYGUES TELECOM", false);
-                readAnfr("BPT", "BPT", true);
+                readAnfr("BPT", "SPT", true);
                 readAnfr("DAU", "DAUPHIN TELECOM", true);
                 readAnfr("DIGI", "DIGICEL", true);
                 readAnfr("FREE", "FREE CARAIBES", true);

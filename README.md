@@ -1,9 +1,10 @@
 # Generateur_ANFR
 Télécharge l'open data auprès de l'ANFR (data.anfr.fr) et génère les bases de données utilisées par le projet eNB Analytics + analyse des différences entre 2 datasets. 4G et 5G uniquement.
-
 Il faut manuellement récupérer et placer le fichier SUP_ANTENNE.txt disponible sur data.gouv.fr (Données sur les installations radioélectriques de plus de 5 watts) dans le dossier /input
 
-Diffusion/Usage/Modifications librement autorisés à condition de citer la source et publier les modifications/améliorations
+Diffusion/Usage/Modifications librement autorisées à condition de citer la source et publier les modifications/améliorations.
+
+## Programme Java
 
 Nécessite Java 8 minimum. Compiler avec la commande :
 ```
@@ -26,4 +27,4 @@ La base utilisée par l'appli se trouve dans /SQL/ANFR_SQLite.db (à compresser 
 
 
 ## Carte HTML
-Les icônes de la carte sont dans le dossier html/assets/images/ et doivent au préalable être colorées/personnalisées.
+Template de carte sous Leaflet. Les icônes sont dans le dossier /html/assets/images.

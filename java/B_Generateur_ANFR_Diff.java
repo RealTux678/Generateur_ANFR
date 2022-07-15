@@ -69,6 +69,14 @@ public class B_Generateur_ANFR_Diff {
             System.out.println("2. Free   " + dbHt_2.numberRows("20815"));
             System.out.println("2. ByTel  " + dbHt_2.numberRows("20820"));
             System.out.println("2. OutreM " + dbHt_2.numberRows("99999") + "\n");
+            
+            //bloquer si la base plus récente contient le même nombre d'enregistrements ou moins
+            int totF1 = dbHt_1.numberRows("20801")+dbHt_1.numberRows("20810")+dbHt_1.numberRows("20815")+dbHt_1.numberRows("20820")+dbHt_1.numberRows("99999");
+            int totF2 = dbHt_2.numberRows("20801")+dbHt_2.numberRows("20810")+dbHt_2.numberRows("20815")+dbHt_2.numberRows("20820")+dbHt_2.numberRows("99999");
+            if (totF1 <= totF2) {
+                System.out.println(Main.ANSI_RED + "Erreur: "+file1+" ("+totF1+") <= "+file2+" ("+totF2+")" + Main.ANSI_RESET);
+                return;
+            }
 
             jsFileName = "diff.js";
             String varSuffix = "";

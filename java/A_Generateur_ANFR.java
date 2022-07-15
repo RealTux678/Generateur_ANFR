@@ -199,6 +199,9 @@ public class A_Generateur_ANFR {
         }
 
         setColAndGetDataset();  //récupérer la date de MAJ et définir dynamiquement les colonnes
+        if (OPERAT == -1)
+            return false;       //Erreur dans l'attribution des colonnes
+        
         if (week.equals("-1")) {
             System.out.println(Main.ANSI_RED+"Erreur décodage de la date"+Main.ANSI_RESET);
             Main.writeLog(TAG+"Erreur décodage de la date de ANFR.csv");
@@ -650,7 +653,7 @@ public class A_Generateur_ANFR {
 
         ResultSet rs = dbAa.queryRs("SELECT AER_NB_AZIMUT, AER_NB_ALT_BAS FROM SUP_ANTENNE WHERE STA_NM_ANFR = '"+STA_NM_ANFR+"'");
         try {
-            while (rs.next()) {
+            if (rs.next()) {
                 azimuthsDg= rs.getString(1);
                 hauteurDg = rs.getInt(2);
             }
@@ -711,24 +714,11 @@ public class A_Generateur_ANFR {
                                 COORD = i;
                         }
 
-                        // en cas d'erreur, charger les valeur par défaut
-                        if(OPERAT==-1|SUP_ID==-1|SYSTEME==-1|SERVICE==-1|C_DEPT==-1|C_INSEE==-1|DATE_MAJ==-1|STA_ID==-1|HAUTEUR==-1|ADR_L==-1|ADR_1==-1|ADR_2==-1|C_POST==-1|COORD==-1) {
-                            System.out.println(Main.ANSI_RED+"Erreur dans l'attribution des colonnes. Fallback."+Main.ANSI_RESET);
-                            Main.writeLog(TAG+"Erreur dans l'attribution des colonnes.");
-                            OPERAT  = 1;
-                            SUP_ID  = 2;
-                            SYSTEME = 3;
-                            SERVICE = 4;
-                            C_DEPT  = 5;
-                            C_INSEE = 6;
-                            DATE_MAJ= 8;
-                            STA_ID  = 9;
-                            HAUTEUR = 11;
-                            ADR_L   = 13;
-                            ADR_1   = 14;
-                            ADR_2   = 15;
-                            C_POST  = 17;
-                            COORD   = 19;
+                        // vérifier que toutes les colonne sont identifiées
+                        if (OPERAT==-1|SUP_ID==-1|SYSTEME==-1|SERVICE==-1|C_DEPT==-1|C_INSEE==-1|DATE_MAJ==-1|STA_ID==-1|HAUTEUR==-1|ADR_L==-1|ADR_1==-1|ADR_2==-1|C_POST==-1|COORD==-1) {
+                            System.out.println(Main.ANSI_RED+"Erreur dans l'attribution des colonnes. Arrêt."+Main.ANSI_RESET);
+                            Main.writeLog(TAG+"Erreur dans l'attribution des colonnes. Arrêt");
+                            OPERAT = -1;    //pour la détection de l'erreur
                         }
                     } else if (count==2) {
                         //1ère ligne de données
@@ -736,7 +726,7 @@ public class A_Generateur_ANFR {
                         String splitter;
                         byte indexY,indexM=1,indexD;
                         if (tokens[DATE_MAJ].contains("/")) {
-                            splitter = "/";     //FORMAT DD/MM/YYY
+                            splitter = "/";     //FORMAT DD/MM/YYYY
                             indexY = 2;
                             indexD = 0;
                         } else {

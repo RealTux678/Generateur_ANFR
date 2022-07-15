@@ -9,10 +9,12 @@ import java.util.Date;
 public class Main {
     public static String version = "1.27 [Mar 18 2022]";
 
-    // PATH
+    // PATHS
     public static String ABS_PATH, F_PATH;
+    public static String SERVER_FILES_PATH = "/var/www/html";
+    
     public static boolean DEBUG;    //mode debug
-
+    
 
     public static void main(String[] args) {
         long startTime = timestampMilis();

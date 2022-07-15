@@ -92,7 +92,7 @@ public class Main {
             br.close(); //fermer le flux.
             return lineCount;
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(ANSI_RED + e.getMessage() + ANSI_RESET);
         }
         return -1;
     }

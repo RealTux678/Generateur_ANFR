@@ -11,7 +11,7 @@ public class Main {
 
     // PATHS
     public static String ABS_PATH, F_PATH;
-    public static String SERVER_FILES_PATH = "/var/www/html";
+    public final static String SERVER_FILES_PATH = "/var/www/html";
     
     public static boolean DEBUG;    //mode debug
     

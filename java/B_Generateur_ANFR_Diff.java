@@ -287,7 +287,7 @@ public class B_Generateur_ANFR_Diff {
         sqlLon = 0.0;
         ResultSet rs = dbHt_1.queryRs("SELECT * FROM '"+oper+"' WHERE AnfrID = "+anfrId);
         try {
-            while (rs.next()) {
+            if (rs.next()) {
                 sqlData= rs.getString(6);
                 sqlLat = rs.getDouble(7);
                 sqlLon = rs.getDouble(8);

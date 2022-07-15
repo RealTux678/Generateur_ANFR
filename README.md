@@ -8,7 +8,7 @@ Diffusion/Usage/Modifications librement autorisées à condition de citer la sou
 
 Nécessite Java 8 minimum. Compiler avec la commande :
 ```
-javac Main
+javac Main.java
 ```
 Usage<br />
 ./Generateur_ANFR.sh anfr<br />

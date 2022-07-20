@@ -132,6 +132,7 @@ public class A_Generateur_ANFR {
                     return;
                 }
             } else {
+                System.out.println("Erreur dans le nom du fichier: "+dbFile);
                 return;
             }
 
@@ -385,7 +386,6 @@ public class A_Generateur_ANFR {
                         String[] tok = tokens[SERVICE].split("T");    //supprimer le 'T00:00:00'
                         String service = tok[0];
 
-                        systeme = systeme.replace("5G NR ", "");
                         anfrData = anfrData.replace("'", "''");  //escape single quote before SQL insert !
 
                         // insert SQL

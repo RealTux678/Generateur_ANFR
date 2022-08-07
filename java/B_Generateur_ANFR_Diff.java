@@ -95,10 +95,10 @@ public class B_Generateur_ANFR_Diff {
             writeData(1);    //écrire les données vers diff.js
             stats();        //statistiques
             
-            int news = dbAa.numberRowsQ("SELECT COUNT() AS rowcount FROM Nouvelles WHERE xG = 4 AND Flag = 'N'");
-            int acti = dbAa.numberRowsQ("SELECT COUNT() AS rowcount FROM Nouvelles WHERE xG = 4 AND Flag = 'A'");
-            int news5 = dbAa.numberRowsQ("SELECT COUNT() AS rowcount FROM Nouvelles WHERE xG = 5 AND Flag = 'N'");
-            int acti5 = dbAa.numberRowsQ("SELECT COUNT() AS rowcount FROM Nouvelles WHERE xG = 5 AND Flag = 'A'");
+            int news = dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE xG = 4 AND Flag = 'N'");
+            int acti = dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE xG = 4 AND Flag = 'A'");
+            int news5 = dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE xG = 5 AND Flag = 'N'");
+            int acti5 = dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE xG = 5 AND Flag = 'A'");
 
             dbHt_1.close(); //fermer la connexion
             dbHt_2.close(); //fermer la connexion

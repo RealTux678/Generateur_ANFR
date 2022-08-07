@@ -155,11 +155,21 @@ public class SQLiteConnect_Aa {
         return count;
     }
 
-
-
-
-
-
+    //compter le nombre de lignes avec requête libre
+    public int numberRowsQ(String query) {
+        int count = 0;
+        try {
+            Statement stt = connection.createStatement();
+            ResultSet rs = stt.executeQuery(query);
+            rs.next();
+            count = rs.getInt("rowcount");
+            rs.close();
+            stt.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return count;
+    }
 
 
 

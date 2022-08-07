@@ -497,6 +497,12 @@ public class B_Generateur_ANFR_Diff {
         System.out.println("Act 5G  700 " + dbAa.numberRowsW("Nouvelles", "xG = '5' AND Flag = 'A' AND Syst = 700"));
         System.out.println("Act 5G 2100 " + dbAa.numberRowsW("Nouvelles", "xG = '5' AND Flag = 'A' AND Syst = 2100"));
         System.out.println("Act 5G 3500 " + dbAa.numberRowsW("Nouvelles", "xG = '5' AND Flag = 'A' AND Syst = 3500")+"\n");
+        
+        // déclarations 2100 par opérateur
+        System.out.println("Dec 4G 2100 ORA  " + dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE PLMN = 20801 AND xG = 4 AND Flag = 'N' AND Syst = 2100"));
+        System.out.println("Dec 4G 2100 SFR  " + dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE PLMN = 20810 AND xG = 4 AND Flag = 'N' AND Syst = 2100"));
+        System.out.println("Dec 4G 2100 Free " + dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE PLMN = 20815 AND xG = 4 AND Flag = 'N' AND Syst = 2100"));
+        System.out.println("Dec 4G 2100 ByTl " + dbAa.numberRowsQ("SELECT COUNT(*) AS rowcount FROM Nouvelles WHERE PLMN = 20820 AND xG = 4 AND Flag = 'N' AND Syst = 2100") + "\n");
 
         Main.writeLog("Act 4G  700 " + dbAa.numberRowsW("Nouvelles", "xG = '4' AND Flag = 'A' AND Syst = 700"));
         Main.writeLog("Act 4G  800 " + dbAa.numberRowsW("Nouvelles", "xG = '4' AND Flag = 'A' AND Syst = 800"));

@@ -44,7 +44,7 @@ public class B_Generateur_ANFR_Diff {
         if (checkBases()) {
             dbAa = new SQLiteConnect_Aa();
             dbAa.connect();
-            dbAa.sql_query("CREATE TABLE Nouvelles (ID INTEGER PRIMARY KEY AUTOINCREMENT, PLMN INTEGER, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, DateAct TEXT, Syst TEXT, Flag TEXT, OP TEXT)"); //OP utilisé poue différencier l'operateur d'Outre-mer
+            dbAa.sql_query("CREATE TABLE Nouvelles (ID INTEGER PRIMARY KEY AUTOINCREMENT, PLMN INTEGER, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, DateAct TEXT, Syst SMALLINT, Flag TEXT, OP TEXT)"); //OP utilisé poue différencier l'operateur d'Outre-mer
             dbAa.sql_query("CREATE TABLE OLD (ID INTEGER PRIMARY KEY AUTOINCREMENT, OP TEXT, INSEE TEXT, sta_nm_anfr TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst SMALLINT)");
             dbAa.sql_query("CREATE TABLE NEW (ID INTEGER PRIMARY KEY AUTOINCREMENT, OP TEXT, INSEE TEXT, sta_nm_anfr TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst SMALLINT)");
 
@@ -80,6 +80,10 @@ public class B_Generateur_ANFR_Diff {
 
             jsFileName = "diff.js";
             String varSuffix = "";
+            
+            File file = new File(Main.ABS_PATH +"/Generated");
+            if (!file.exists())
+                file.mkdirs();
 
             File f = new File(Main.ABS_PATH+"/Generated/"+jsFileName);
             f.delete();
@@ -257,7 +261,7 @@ public class B_Generateur_ANFR_Diff {
                 String anfrData = sqlData;
                 anfrData = anfrData.replace("'","''");  //escape single quote before SQL insert !
                 System.out.println(oper+" Nouvelle fréquence : anfrId="+anfrId+" syst="+syst+" "+xg+"G "+anfrData);
-                dbAa.sql_query("INSERT INTO Nouvelles VALUES (NULL, '"+oper+"', '"+anfrId+"', '"+anfrData+"', '"+sqlLat+"', '"+sqlLon+"', '"+ xg +"', '', '"+syst+"', 'N', '"+rs.getString(1)+"')");
+                dbAa.sql_query("INSERT INTO Nouvelles VALUES (NULL, '"+oper+"', '"+anfrId+"', '"+anfrData+"', '"+sqlLat+"', '"+sqlLon+"', '"+ xg +"', '', "+syst+", 'N', '"+rs.getString(1)+"')");
             }
             rs.close();
             System.out.println(oper+": "+read+" lignes lues");
@@ -275,7 +279,7 @@ public class B_Generateur_ANFR_Diff {
                 String anfrData = sqlData;
                 anfrData = anfrData.replace("'","''");  //escape single quote before SQL insert !
                 System.out.println(oper+" Nouvelle activation: anfrId="+anfrId+" syst="+syst+" "+xg+"G "+anfrData);
-                dbAa.sql_query("INSERT INTO Nouvelles VALUES (NULL, '"+oper+"', '"+anfrId+"', '"+anfrData+"', "+sqlLat+", "+sqlLon+", '"+ xg +"', '', '"+syst+"', 'A', '"+rs1.getString(1)+"')");
+                dbAa.sql_query("INSERT INTO Nouvelles VALUES (NULL, '"+oper+"', '"+anfrId+"', '"+anfrData+"', "+sqlLat+", "+sqlLon+", '"+ xg +"', '', "+syst+", 'A', '"+rs1.getString(1)+"')");
             }
             rs1.close();
             System.out.println(oper+": "+read+" lignes lues");

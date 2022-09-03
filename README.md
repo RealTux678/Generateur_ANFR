@@ -17,7 +17,7 @@ Téléchargement + traitement + analyse des différences
 ./Generateur_ANFR.sh anfr-local<br />
 Traitement + analyse des différences. Nécéssite au préalable d'avoir manuellement téléchargé l'open-data et placé le fichier (qui doit être nommé ANFR.csv) dans le dossier /input
 
-./Generateur_ANFR.sh diff-only<br />
+./Generateur_ANFR.sh anfr-diff-only<br />
 Analyse des différences uniquement
 
 

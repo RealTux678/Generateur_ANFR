@@ -44,9 +44,9 @@ public class B_Generateur_ANFR_Diff {
         if (checkBases()) {
             dbAa = new SQLiteConnect_Aa();
             dbAa.connect();
-            dbAa.sql_query("CREATE TABLE Nouvelles (ID INTEGER PRIMARY KEY AUTOINCREMENT, PLMN INTEGER, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, DateAct TEXT, Syst TEXT, Flag TEXT, CP TEXT)"); //CP contient l'operateur outre-mer
-            dbAa.sql_query("CREATE TABLE IF NOT EXISTS OLD (ID INTEGER PRIMARY KEY AUTOINCREMENT, CP TEXT, INSEE TEXT, sta_nm_anfr TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst TEXT)");
-            dbAa.sql_query("CREATE TABLE IF NOT EXISTS NEW (ID INTEGER PRIMARY KEY AUTOINCREMENT, CP TEXT, INSEE TEXT, sta_nm_anfr TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst TEXT)");
+            dbAa.sql_query("CREATE TABLE Nouvelles (ID INTEGER PRIMARY KEY AUTOINCREMENT, PLMN INTEGER, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, DateAct TEXT, Syst TEXT, Flag TEXT, OP TEXT)"); //OP utilisé poue différencier l'operateur d'Outre-mer
+            dbAa.sql_query("CREATE TABLE OLD (ID INTEGER PRIMARY KEY AUTOINCREMENT, OP TEXT, INSEE TEXT, sta_nm_anfr TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst SMALLINT)");
+            dbAa.sql_query("CREATE TABLE NEW (ID INTEGER PRIMARY KEY AUTOINCREMENT, OP TEXT, INSEE TEXT, sta_nm_anfr TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst SMALLINT)");
 
             dbHt_1 = new SQLiteConnect_Histo();
             dbHt_1.restore(file1);
@@ -212,28 +212,30 @@ public class B_Generateur_ANFR_Diff {
             while (rs.next()) {
                 updateProgressBar(lignes, read);
                 read++;
+                String op = oper;
+                if (oper.equals("99999"))
+                    op = rs.getString(2);
                 String anfrData = rs.getString(6);
                 anfrData = anfrData.replace("'","''");  //escape single quote before SQL insert !
-                dbAa.sql_query("INSERT INTO NEW VALUES (NULL, '"+rs.getString(2)+"', '"+rs.getString(3)+"', '"+rs.getString(4)+"', "+rs.getInt(5)+", '"+ anfrData +"', '"+rs.getString(7)+"', '"+rs.getString(8)+"', '"+rs.getString(9)+"', '"+rs.getString(10)+"', '"+rs.getString(11)+"', '"+rs.getString(12)+"')");
+                dbAa.sql_query("INSERT INTO NEW VALUES (NULL, '"+op+"', '"+rs.getString(3)+"', '"+rs.getString(4)+"', "+rs.getInt(5)+", '"+ anfrData +"', '"+rs.getString(7)+"', '"+rs.getString(8)+"', '"+rs.getString(9)+"', '"+rs.getString(10)+"', '"+rs.getString(11)+"', "+rs.getInt(12)+")");
             }
             rs.close();
-            System.out.println(oper+": "+read+" lignes écrites                ");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            System.out.println(oper+": "+read+" lignes écrites                             ");
 
-        ResultSet rs2 = dbHt_2.queryRs("SELECT * FROM '"+oper+"' ORDER BY AnfrID ASC");
-        int read2=0;
-        try {
+            ResultSet rs2 = dbHt_2.queryRs("SELECT * FROM '"+oper+"' ORDER BY AnfrID ASC");
+            int read2=0;
             while (rs2.next()) {
                 updateProgressBar(lignes, (read+read2));
                 read2++;
+                String op = oper;
+                if (oper.equals("99999"))
+                    op = rs2.getString(2);
                 String anfrData = rs2.getString(6);
                 anfrData = anfrData.replace("'","''");  //escape single quote before SQL insert !
-                dbAa.sql_query("INSERT INTO OLD VALUES (NULL, '"+rs2.getString(2)+"', '"+rs2.getString(3)+"', '"+rs2.getString(4)+"', "+rs2.getInt(5)+", '"+ anfrData +"', '"+rs2.getString(7)+"', '"+rs2.getString(8)+"', '"+rs2.getString(9)+"', '"+rs2.getString(10)+"', '"+rs2.getString(11)+"', '"+rs2.getString(12)+"')");
+                dbAa.sql_query("INSERT INTO OLD VALUES (NULL, '"+op+"', '"+rs2.getString(3)+"', '"+rs2.getString(4)+"', "+rs2.getInt(5)+", '"+ anfrData +"', '"+rs2.getString(7)+"', '"+rs2.getString(8)+"', '"+rs2.getString(9)+"', '"+rs2.getString(10)+"', '"+rs2.getString(11)+"', "+rs2.getInt(12)+")");
             }
             rs2.close();
-            System.out.println(oper+": "+read2+" lignes écrites");
+            System.out.println(oper+": "+read2+" lignes écrites                            ");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -244,7 +246,7 @@ public class B_Generateur_ANFR_Diff {
         //déclarations
         int read=0;
         //ne pas faire intervenir AnfrData au cas ou il y aurait eu une modification de typographie, idem pour lat et lon
-        ResultSet rs = dbAa.queryRs("SELECT CP, AnfrID, xG, Syst FROM NEW EXCEPT SELECT CP, AnfrID, xG, Syst FROM OLD");
+        ResultSet rs = dbAa.queryRs("SELECT OP, AnfrID, xG, Syst FROM NEW EXCEPT SELECT OP, AnfrID, xG, Syst FROM OLD");
         try {
             while (rs.next()) {
                 read++;
@@ -259,15 +261,11 @@ public class B_Generateur_ANFR_Diff {
             }
             rs.close();
             System.out.println(oper+": "+read+" lignes lues");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        //activations
-        read=0;
-        //ne pas faire intervenir AnfrData au cas ou il y aurait eu une modification de typographie, idem pour lat et lon
-        ResultSet rs1 = dbAa.queryRs("SELECT CP, AnfrID, xG, Syst FROM NEW WHERE Act = 1 INTERSECT SELECT CP, AnfrID, xG, Syst FROM OLD WHERE Act = 0");
-        try {
+            //activations
+            read=0;
+            //ne pas faire intervenir AnfrData au cas ou il y aurait eu une modification de typographie, idem pour lat et lon
+            ResultSet rs1 = dbAa.queryRs("SELECT OP, AnfrID, xG, Syst FROM NEW WHERE Act = 1 INTERSECT SELECT OP, AnfrID, xG, Syst FROM OLD WHERE Act = 0");
             while (rs1.next()) {
                 read++;
                 int anfrId = rs1.getInt(2);
@@ -284,7 +282,6 @@ public class B_Generateur_ANFR_Diff {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
 

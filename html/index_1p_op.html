@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Nouvelles déclarations auprès de l'ANFR">
+	<meta name="generator" content="Bluefish 2.2.11" >
+	<title>Nouvelles déclarations ANFR</title>
+	<link rel="icon" type="image/x-icon" href="./favicon.ico">
+	
+	<!-- disable cache -->
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+	<meta http-equiv="Pragma" content="no-cache" />
+	<meta http-equiv="Expires" content="0" />
+
+	<!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" integrity="sha512-hoalWLoI8r4UszCkZ5kL8vayOGVae1oxXe/2A4AO6J9+580uKHDO3JdHb7NzwwzK5xr/Fs0W40kiNHxM9vyTtQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js" integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ==" crossorigin=""></script>
+
+	<!-- MarkerCluster -->	
+	<link rel="stylesheet" href="./assets/js/MarkerCluster/MarkerCluster.css" />
+	<link rel="stylesheet" href="./assets/js/MarkerCluster/MarkerCluster.Default.css" />
+	<script src="./assets/js/MarkerCluster/leaflet.markercluster.js"></script>
+
+	<!-- Après Leaflet et Leaflet.markercluster -->
+	<script src="./assets/js/MarkerCluster/leaflet.markercluster.layersupport.js"></script>
+	
+	<style>
+		html, body {
+			height: 100%;
+			margin: 0;
+		}
+		.info { padding: 6px 8px; font: 12px/14px Arial, Helvetica, sans-serif; background: white; background: rgba(255,255,255,0.8); box-shadow: 0 0 15px rgba(0,0,0,0.2); border-radius: 5px; }
+		.legend { text-align: left; line-height: 18px; color: #333; }
+		.legend i { width: 18px; height: 18px; float: left; margin-right: 4px; opacity: 0.7; }
+		.legend br { clear: both; } <!-- fix bug chrome(imun) -->
+	</style>
+</head>
+
+<body>
+    <div id="map" style="width: 100%; height: 70vh; border: 1px solid #ccc;"></div>
+    <span><br><b>Modifications ANFR hebdomadaires</b>
+		<br>Mise à jour <span id='dataset'></span> du <span id='update'></span>&nbsp;&nbsp;-> Source : <a href="https://data.anfr.fr/anfr/visualisation/export/?id=observatoire_2g_3g_4g" >Opendata Observatoire ANFR</a>
+		<br>
+		<br>4G: <span id='news'></span> fréquences ajoutées, <span id='acti'></span> fréquences activées
+	    <br>4G: <span id='supp'></span> fréquences supprimées, <span id='off'></span> fréquences éteintes
+	    <br>5G: <span id='news5'></span> fréquences ajoutées, <span id='acti5'></span> fréquences activées
+	   	<br>5G: <span id='supp5'></span> fréquences supprimées, <span id='off5'></span> fréquences éteintes
+	</span>
+	
+	<script src="./assets/js/jquery-min.js"></script>
+	<script src="./assets/data/diff_1p_op.js"></script>
+	
+	<script type="text/javascript">
+		var lay_ora = new L.layerGroup();
+		var lay_sfr = new L.layerGroup();
+		var lay_free= new L.layerGroup();
+		var lay_bytl= new L.layerGroup();
+		var lay_om1 = new L.layerGroup();
+		var lay_om2 = new L.layerGroup();
+		var lay_om3 = new L.layerGroup();
+		var lay_om4 = new L.layerGroup();
+		
+		var tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				minZoom: 3,
+				maxZoom: 15,
+				attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors '
+			}),
+			latlng = L.latLng(46.45, 2.25);
+
+		var map = L.map('map', {center: latlng, zoom: 5, layers: [tiles]});
+
+		L.control.scale({metric: true, imperial: false}).addTo(map);	// Ajouter l'échelle 
+
+		//custom icon
+        var redIcon = L.icon({
+        	iconUrl: './assets/images/marker_red.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+        var blueIcon = L.icon({
+        	iconUrl: './assets/images/marker_blue.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+        var freeIcon = L.icon({
+        	iconUrl: './assets/images/marker_grey.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+		var orangeIcon = L.icon({
+        	iconUrl: './assets/images/marker_orange.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+        var greenIcon = L.icon({
+        	iconUrl: './assets/images/marker_green.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+		
+		var yellowIcon = L.icon({
+        	iconUrl: './assets/images/marker_yellow.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+		
+		var cyanIcon = L.icon({
+        	iconUrl: './assets/images/marker_cyan.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+		
+		var violetIcon = L.icon({
+        	iconUrl: './assets/images/marker_violet.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+			iconSize: [26, 42],
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+        
+        
+        var ripRed = L.icon({
+        	iconUrl: './assets/images/rip_red.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+        var ripBlue = L.icon({
+        	iconUrl: './assets/images/rip_blue.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+        var ripGrey = L.icon({
+        	iconUrl: './assets/images/rip_grey.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+		var ripOrange = L.icon({
+        	iconUrl: './assets/images/rip_orange.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+
+        var ripBlack = L.icon({
+        	iconUrl: './assets/images/rip_black.png',
+        	shadowUrl: './assets/images/marker-shadow.png',
+        	iconAnchor: [12, 41],
+        	shadowAnchor: [12, 41],
+			popupAnchor: [0, -36]
+        });
+		
+		var mcg = L.markerClusterGroup.layerSupport().addTo(map);
+		mcg.checkIn([
+			lay_ora,
+			lay_sfr,
+			lay_free,
+			lay_bytl,
+			lay_om1,
+			lay_om2,
+			lay_om3,
+			lay_om4,
+		]);
+
+		for (var i = 0; i < addressPoints.length; i++) {
+			var a = addressPoints[i];
+			var title;
+			var icon;
+			var layer;
+			if (a[7]==0) {
+				title = "Support #"+a[3] + "<br>"+a[4]+ "<br>Suppression: "+a[5]+ "<br>Extinction: "+a[6];
+				if (a[2]==20820) {
+					icon = ripBlue;
+					layer = lay_bytl;
+				} else if (a[2]==20810) {
+					icon = ripRed;
+					layer = lay_sfr;
+				} else if (a[2]==20801) {
+					icon = ripOrange;
+					layer = lay_ora;
+				} else if (a[2]==20815) {
+					icon = ripGrey;
+					layer = lay_free;
+				} else if (a[2]==99991) {
+					icon = ripBlack;
+					layer = lay_om1;
+				} else if (a[2]==99992) {
+					icon = ripBlack;
+					layer = lay_om2;
+				} else if (a[2]==99993) {
+					icon = ripBlack;
+					layer = lay_om3;
+				} else if (a[2]==99994) {
+					icon = ripBlack;
+					layer = lay_om4;
+				} else {
+					icon = ripBlack;
+					layer = lay_sfr;
+				}
+			} else {
+				title = "Support #"+a[3] + "<br>"+a[4]+ "<br>Nouveau: "+a[5]+ "<br>Activation: "+a[6];
+				if (a[2]==20820) {
+					icon = blueIcon;
+					layer = lay_bytl;
+				} else if (a[2]==20810) {
+					icon = redIcon;
+					layer = lay_sfr;
+				} else if (a[2]==20801) {
+					icon = orangeIcon;
+					layer = lay_ora;
+				} else if (a[2]==20815) {
+					icon = freeIcon;
+					layer = lay_free;
+				} else if (a[2]==99991) {
+					icon = yellowIcon;
+					layer = lay_om1;
+				} else if (a[2]==99992) {
+					icon = cyanIcon;
+					layer = lay_om2;
+				} else if (a[2]==99993) {
+					icon = greenIcon;
+					layer = lay_om3;
+				} else if (a[2]==99994) {
+					icon = violetIcon;
+					layer = lay_om4;
+				} else {
+					icon = redIcon;
+					layer = lay_sfr;
+				}
+			}
+
+			var marker = L.marker(L.latLng(a[0], a[1]), { icon: icon, title: "Support #"+a[3]+" - "+a[4] });
+			marker.bindPopup(title);
+			marker.addTo(layer)
+		}
+		//map.addLayer(markers);
+		
+		L.control.layers(null, {
+			"Orange": lay_ora.addTo(map),
+			"SFR/SRR": lay_sfr.addTo(map),
+			"Free ": lay_free.addTo(map),
+			"Bouygues": lay_bytl.addTo(map),
+			"Digicel/Maoré/Viti/Glob.": lay_om1.addTo(map),
+			"Only/TelcoOI/Vini/SPM T.": lay_om2.addTo(map),
+			"Dauphin Tel./Zeop": lay_om3.addTo(map),
+			"Vodaphone/SPT/GOPT": lay_om4.addTo(map),
+		}).addTo(map);
+		
+		var legend = L.control({position: 'bottomright'});
+		legend.onAdd = function (map) {
+			var div = L.DomUtil.create('div', 'info legend'),
+				grades = [],
+				labels = [],
+				from, to;
+			labels.push('<i style="background: #ec6f00 "></i> Orange');
+			labels.push('<i style="background: #ff0000 "></i> SFR');
+			labels.push('<i style="background: #6c6c6c "></i> Free');
+			labels.push('<i style="background: #105ec8 "></i> ByTel');
+			labels.push('<i style="background: #FFD800 "></i> Autres');
+			labels.push('<i style="background: #00FFFF "></i> Autres');
+			labels.push('<i style="background: #267F00 "></i> Autres');
+			labels.push('<i style="background: #4800FF "></i> Autres');
+			div.innerHTML = labels.join('<br>');
+			return div;
+		};
+		legend.addTo(map);
+
+		document.getElementById("dataset").innerHTML = dataset;
+		document.getElementById("update").innerHTML = update;
+		document.getElementById("news").innerHTML = news;
+		document.getElementById("acti").innerHTML = acti;
+		document.getElementById("news5").innerHTML = news5;
+		document.getElementById("acti5").innerHTML = acti5;
+		document.getElementById("supp").innerHTML = supp;
+		document.getElementById("off").innerHTML = off;
+		document.getElementById("supp5").innerHTML = supp5;
+		document.getElementById("off5").innerHTML = off5;
+	</script>
+
+</body>
+</html>

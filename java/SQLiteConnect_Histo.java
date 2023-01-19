@@ -130,6 +130,22 @@ public class SQLiteConnect_Histo {
         return count;
     }
 
+    //compter le nombre de lignes avec requête libre
+    public int numberRowsQ(String query) {
+        int count = 0;
+        try {
+            Statement stt = connection.createStatement();
+            ResultSet rs = stt.executeQuery(query);
+            rs.next();
+            count = rs.getInt("rowcount");
+            rs.close();
+            stt.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return count;
+    }
+
 
     public void insertData(String table, String cp, String insee, String sta, int AnfrID, String AnfrData, double LAT, double LON, int xg, int act, String actDate, String syst) {
         String query;

@@ -801,7 +801,7 @@ public class A_Generateur_ANFR {
 
     // ajoute la hauteur et les azimuths à-postiori
     private void processHautAz(String plmn) {
-        int nbLines = dbAf.numberRows(plmn);
+        int nbSta = dbAf.numberRowsQ("SELECT COUNT(DISTINCT AnfrID) AS rowcount FROM '"+plmn+"'");
         int count=0;
         ResultSet rs = dbAf.queryRs("SELECT DISTINCT AnfrID, sta_nm_anfr FROM '"+plmn+"'"); //une ligne par station
         try {
@@ -815,7 +815,7 @@ public class A_Generateur_ANFR {
                     dbDr.sql_query("UPDATE '" + plmn + "' SET Azimuth = '" + azimuthsDg + "' WHERE AnfrID = " + anfrId);    //écrire uniquement les azimuths
                 else
                     dbDr.sql_query("UPDATE '" + plmn + "' SET Azimuth = '" + azimuthsDg + "', Haut = " + hauteurDg+" WHERE AnfrID = " + anfrId);
-                updateProgressBar(nbLines, count);
+                updateProgressBar(nbSta, count);
                 count++;
             }
             rs.close();

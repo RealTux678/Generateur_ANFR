@@ -31,25 +31,23 @@ public class A_ANFR_Downloader {
             System.out.println(TAG + "Erreur lors du téléchargement");
             Main.writeLog(TAG+" Erreur lors du téléchargement");
             lignes = 0;
-        } else {
-            if (li >= lignesPrec) {
-                Main.writeLog(TAG + li+" lignes téléchargées");
-                File f1 = new File(Main.ABS_PATH + "/input/ANFR.csv");   //éffacer le fichier précédent
-                f1.delete();
+        } else if (li >= (lignesPrec * 0.9)) {
+            Main.writeLog(TAG + li+" lignes téléchargées");
+            File f1 = new File(Main.ABS_PATH + "/input/ANFR.csv");   //éffacer le fichier précédent
+            f1.delete();
 
-                File oldfile = new File(Main.ABS_PATH + "/input/ANFR_DL.csv");
-                File newfile = new File(Main.ABS_PATH + "/input/ANFR.csv");
-                if (!oldfile.renameTo(newfile)) {
-                    System.out.println("Erreur lors du renommage");
-                    Main.writeLog(TAG + "Erreur lors du renommage");
-                }
-
-                lignes = li;    //nb de lignes. Le faire en dernier pour que le check de "lignes > 0 dans Main" puisse confirmer que tout s'est bien passé
-            } else {
-                lignes = 0;
-                System.out.println(TAG+"Erreur: "+li+" téléchargées < "+lignesPrec+ " préc.");
-                Main.writeLog(TAG+"Erreur: "+li+" téléchargées < "+lignesPrec+ " préc.");
+            File oldfile = new File(Main.ABS_PATH + "/input/ANFR_DL.csv");
+            File newfile = new File(Main.ABS_PATH + "/input/ANFR.csv");
+            if (!oldfile.renameTo(newfile)) {
+                System.out.println("Erreur lors du renommage");
+                Main.writeLog(TAG + "Erreur lors du renommage");
             }
+
+            lignes = li;    //nb de lignes. Le faire en dernier pour que le check de "lignes > 0 dans Main" puisse confirmer que tout s'est bien passé
+        } else {
+            lignes = 0;
+            System.out.println(TAG+"Erreur: "+li+" téléchargées < "+lignesPrec+ " préc.");
+            Main.writeLog(TAG+"Erreur: "+li+" téléchargées < "+lignesPrec+ " préc.");
         }
 
         System.out.println("Terminé: "+lignes+" lignes téléchargées !");

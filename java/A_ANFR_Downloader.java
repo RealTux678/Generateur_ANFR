@@ -24,8 +24,7 @@ public class A_ANFR_Downloader {
         gestFichier();
         lignesPrec = Main.checkFileLines(Main.ABS_PATH +"/input/ANFR.csv");
 
-        //int li = download("https://data.anfr.fr/api/records/2.0/downloadfile/format=csv&resource_id=88ef0887-6b0f-4d3f-8545-6d64c8f597da&use_labels_for_header=true");    //nouveau lien fin mars 2022
-        int li = download("https://data.anfr.fr/api/records/2.0/downloadfile/format=csv&refine.generation=4G&refine.generation=5G&resource_id=88ef0887-6b0f-4d3f-8545-6d64c8f597da&use_labels_for_header=true");
+        int li = download("https://data.anfr.fr/d4c/api/records/2.0/downloadfile/format=csv&refine.generation=4G&refine.generation=5G&resource_id=88ef0887-6b0f-4d3f-8545-6d64c8f597da&use_labels_for_header=true&user_defined_fields=true");
 
         if (li < 1000) {
             System.out.println(TAG + "Erreur lors du téléchargement");

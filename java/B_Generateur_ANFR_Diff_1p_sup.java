@@ -18,7 +18,7 @@ import java.util.stream.Stream;
  * Génère : diff.js
  *************************************************************************************/
 
-public class B_Generateur_ANFR_Diff {
+public class B_Generateur_ANFR_Diff_1p_sup {
 
     private String TAG = "ANFR Diff ";
     private SQLiteConnect_Aa dbAa;
@@ -33,7 +33,7 @@ public class B_Generateur_ANFR_Diff {
     private String sqlVersion;                      // Dataset de file1
 
 
-    protected B_Generateur_ANFR_Diff() {
+    protected B_Generateur_ANFR_Diff_1p_sup() {
         Main.writeLog(TAG);
         generateur();
         System.out.println(TAG+"Terminé !");

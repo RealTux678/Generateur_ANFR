@@ -215,8 +215,6 @@ public class A_Generateur_ANFR_Cartotelco {
 
                         if (systeme.contains("NR"))
                             xg = 5;
-                        else if (systeme.contains("GSM"))
-                            xg = 2;
                         else
                             xg = 4;
 

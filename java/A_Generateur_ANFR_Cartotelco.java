@@ -450,7 +450,7 @@ public class A_Generateur_ANFR_Cartotelco {
                                 csvIndexes[13] = i; //COORD
                         }
 
-                        // vérifier que toutes les colonne sont identifiées
+                        // vérifier que toutes les colonnes sont identifiées
                         if (IntStream.of(csvIndexes).anyMatch(x -> x == -1)) {
                             System.out.println(TAG + "h="+ Arrays.toString(csvIndexes));
                             System.out.println(Main.ANSI_RED + "Erreur dans l'attribution des colonnes. Arrêt." + Main.ANSI_RESET);

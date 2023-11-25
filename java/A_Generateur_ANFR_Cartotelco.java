@@ -17,7 +17,7 @@ import java.util.stream.Stream;
  * Générateur de bases ANFR eNB Analytics -> version simplifiée pour Cartotelco
  * Updated by Tristan on 12/04/21, 12/10/21, 24/11/23.
  *
- * Pré-requis: ANFR.csv, laposte_hexasmal.csv et SUP_ANTENNE.txt dans le dossier input
+ * Pré-requis: "ANFR.csv" et "laposte_hexasmal.csv" dans le dossier input
  * Génère: ANFR/yyyy-Sww_Ver.db : base SQL 1l/Freq pour base et suivi de l'historique
  *************************************************************************************/
 

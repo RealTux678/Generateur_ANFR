@@ -29,12 +29,24 @@ public class Main {
             System.out.println("ANFR");
             A_ANFR_Downloader dw = new A_ANFR_Downloader();
             if (dw.lignes > 0) {
+                // eNB Analytics
+                //A_Generateur_ANFR gen = new A_Generateur_ANFR("");    // Passe 1
+                //new A_Generateur_ANFR(gen.dbFile);      //Passe 2
+                
+                // Cartotelco
                 new A_Generateur_ANFR_Cartotelco();
                 new B_Generateur_ANFR_Diff();
+                
                 //new G_Copy_To_Server("DIFF");
             }
         } else if (args[0].equalsIgnoreCase("anfr-local")) {
             // Mode sans téléchargement. Suppose que le fichier ANFR.csv a été placé manuellement dans /input
+            
+            // eNB Analytics
+            //A_Generateur_ANFR gen = new A_Generateur_ANFR("");    // Passe 1
+            //new A_Generateur_ANFR(gen.dbFile);      //Passe 2
+                
+            // Cartotelco
             new A_Generateur_ANFR_Cartotelco(); 
             new B_Generateur_ANFR_Diff();
             //new G_Copy_To_Server("DIFF");
@@ -50,6 +62,12 @@ public class Main {
     //MODE DEBUG
     private static void start() {
         new A_ANFR_Downloader();
+
+        // eNB Analytics
+        //A_Generateur_ANFR gen = new A_Generateur_ANFR("");    // Passe 1
+        //new A_Generateur_ANFR(gen.dbFile);      //Passe 2
+                
+        // Cartotelco
         new A_Generateur_ANFR_Cartotelco();
         new B_Generateur_ANFR_Diff();
     }

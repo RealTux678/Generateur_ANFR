@@ -29,19 +29,15 @@ public class Main {
             System.out.println("ANFR");
             A_ANFR_Downloader dw = new A_ANFR_Downloader();
             if (dw.lignes > 0) {
-                A_Generateur_ANFR gen = new A_Generateur_ANFR("");  // Passe 1
+                new A_Generateur_ANFR_Cartotelco("");
                 new B_Generateur_ANFR_Diff();
                 //new G_Copy_To_Server("DIFF");
-                new A_Generateur_ANFR(gen.dbFile);      // Passe 2
-                //new G_Copy_To_Server("ANFR");
             }
         } else if (args[0].equalsIgnoreCase("anfr-local")) {
             // Mode sans téléchargement. Suppose que le fichier ANFR.csv a été placé manuellement dans /input
-            A_Generateur_ANFR gen = new A_Generateur_ANFR("");  // Passe 1
+            new A_Generateur_ANFR_Cartotelco(""); 
             new B_Generateur_ANFR_Diff();
             //new G_Copy_To_Server("DIFF");
-            new A_Generateur_ANFR(gen.dbFile);          // Passe 2
-            //new G_Copy_To_Server("ANFR");
         } else if (args[0].equalsIgnoreCase("anfr-diff-only")) {
             // Générer seulement la carte des différences
             new B_Generateur_ANFR_Diff();
@@ -54,9 +50,8 @@ public class Main {
     //MODE DEBUG
     private static void start() {
         new A_ANFR_Downloader();
-        A_Generateur_ANFR gen = new A_Generateur_ANFR("");  // Passe 1
+        new A_Generateur_ANFR_Cartotelco("");
         new B_Generateur_ANFR_Diff();
-        new A_Generateur_ANFR(gen.dbFile);  // Passe 2
     }
 
 

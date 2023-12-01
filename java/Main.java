@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) {
         long startTime = timestampMilis();
-        System.out.println("Tower Utils "+version);
+        System.out.println("Generateur ANFR "+version);
 
         setPaths();
 

@@ -984,6 +984,7 @@ public class A_Generateur_ANFR {
                         String dates5= tokens[9].replace("'", "");
                         String az = tokens[10].replace("'", "");
                         tokens[3] = tokens[3].replace("'", "''");  //escape single quote before SQL insert !
+                        int haut = 0;   //hauteur non gérée pour l'instant
                         if (plmn==21210) {
                             // Monaco
                             // 2022-02-03 = date impossible. L'application la reconnait pour savoir qu'il ne faut pas exploiter les fréquences et dates d'activation
@@ -991,7 +992,7 @@ public class A_Generateur_ANFR {
                             added++;
                         } else if (plmn==20801||plmn==20810||plmn==20815||plmn==20820) {
                             // 2022-02-03 = date impossible. L'application la reconnait pour savoir qu'il ne faut pas exploiter les fréquences et dates d'activation
-                            dbDr.sql_query("INSERT INTO '"+plmn+"' VALUES (NULL, " + supId + ", '" + tokens[3] + "', " + lat + ", " + lon + ", 1, '" + syst + "', '"+dates4+"', '"+syst5+"', '"+dates5+"', 'MONA', '" + az + "')");
+                            dbDr.sql_query("INSERT INTO '"+plmn+"' VALUES (NULL, " + supId + ", '" + tokens[3] + "', " + lat + ", " + lon + ", 1, '" + syst + "', '"+dates4+"', '"+syst5+"', '"+dates5+"', "+haut+", '" + az + "')");
                         }
                     } catch (Exception e) {
                         System.out.println(Main.ANSI_RED+"[MC] Exception line "+count + Main.ANSI_RESET);

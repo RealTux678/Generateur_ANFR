@@ -626,8 +626,6 @@ public class A_Generateur_ANFR {
 */
 
 
-    //TODO
-
     private void sup_Antenne2db() {
         dbAa.delete("Analytica");  //éffacement des données SQL
 
@@ -662,7 +660,12 @@ public class A_Generateur_ANFR {
                     } catch (NumberFormatException e) {
                         az = -1;
                     }
-                    dbAa.insertData_EA("", tokens[2], staId, az, "",0.0,0.0,0,0,"","",haut);
+
+                    //fix 27/12/2023. Parfois le S1 est déclaré à 360° au lieu de 0, provoquant un décalage dans la logique
+                    if (az==360)
+                        az = 0;
+                    
+                    dbAa.sql_query("INSERT INTO Analytica VALUES (NULL, '', '"+tokens[2]+"', '"+staId+"', "+az+", '', '"+0.0+"', '"+0.0+"', "+0+", "+0+", '', '', "+haut+")");
                 }
                 reader.close();
             } catch (IOException e) {

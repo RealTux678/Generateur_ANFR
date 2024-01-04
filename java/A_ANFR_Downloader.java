@@ -49,7 +49,7 @@ public class A_ANFR_Downloader {
             Main.writeLog(TAG+"Erreur: "+li+" téléchargées < "+lignesPrec+ " préc.");
         }
 
-        System.out.println("Terminé: "+lignes+" lignes téléchargées !");
+        System.out.println("Terminé: "+li+" lignes téléchargées !");
     }
 
 

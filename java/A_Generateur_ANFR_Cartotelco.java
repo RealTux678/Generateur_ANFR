@@ -292,6 +292,8 @@ public class A_Generateur_ANFR_Cartotelco {
                         }
 
                         //hauteur. Attention ici c'est la hauteur du pylone et non celle de l'antenne
+                        tokens[csvIndexes[8]] = tokens[csvIndexes[8]].replace("\"", "");    //supprimer d'éventuels "
+                        tokens[csvIndexes[8]] = tokens[csvIndexes[8]].replace(",", ".");    //remplacer éventuelle virgule
                         double haut = Double.parseDouble(tokens[csvIndexes[8]]);
                         if (haut > 70.0)
                             haut = 70.0;

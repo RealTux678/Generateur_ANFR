@@ -62,6 +62,9 @@ public class SQLiteConnexion {
         }
     }
 
+    public synchronized Connection getConnection() {
+        return connection;
+    }
 
     public ResultSet queryRs(String request) {
         ResultSet resultSet = null;

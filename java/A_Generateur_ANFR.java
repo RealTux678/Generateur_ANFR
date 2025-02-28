@@ -36,6 +36,9 @@ public class A_Generateur_ANFR {
     private SQLiteConnexion dbAa;                   //base SQL de travail (volatile)
     private SQLiteConnexion dbDr;                   //base SQL Android générée
     private SQLiteConnexion dbHt;                   //base SQL ANFR générée
+    private Connection conTmp;                      //connexion à la base SQL de travail
+    private Connection conHt;                       //connexion à la base SQL Android Histo
+
 
     private String ligne;                           //ligne à écrire
     private String azimuthsDg = "";                 //azimuts depuis l'openData DataGouv
@@ -52,6 +55,7 @@ public class A_Generateur_ANFR {
     protected A_Generateur_ANFR(String dbFile) {
         dbAa = new SQLiteConnexion();
         dbAa.connect();
+        conTmp = dbAa.getConnection();
         dbAa.sql_query("CREATE TABLE Analytica (ID INTEGER PRIMARY KEY AUTOINCREMENT, CP TEXT, INSEE TEXT, STA_NM_ANFR TEXT, AnfrID INTEGER, AnfrData TEXT, LAT REAL, LON REAL, xG TINYINT, Act TINYINT, DateAct TEXT, Syst TEXT, Haut SMALLINT)");
         dbAa.sql_query("CREATE TABLE laposte (ID INTEGER PRIMARY KEY AUTOINCREMENT, INSEE TEXT, Commune TEXT)");
         dbAa.sql_query("CREATE TABLE SUP_ANTENNE (ID INTEGER PRIMARY KEY AUTOINCREMENT, STA_NM_ANFR TEXT, TAE_ID INTEGER, AER_NB_AZIMUT TEXT, AER_NB_ALT_BAS SMALLINT)"); //pour la hauteur réelle de la station
@@ -156,6 +160,7 @@ public class A_Generateur_ANFR {
             dbHt = new SQLiteConnexion();
             dbHt.dbPath = Main.ABS_PATH + File.separator+"SQL"+File.separator+"ANFR"+File.separator;    //override path
             dbHt.restore(dbFile);
+            dbHt = new SQLiteConnexion();
 
             sup_Antenne2db();       //envoyer TAE_ID, AER_NB_AZIMUT et AER_NB_ALT_BAS dans SUP_ANTENNE
 
@@ -591,43 +596,6 @@ public class A_Generateur_ANFR {
 
 
 
-/*
-    private void sup_Antenne2db() {
-        File file = new File(Main.ABS_PATH +"/input/SUP_ANTENNE.txt");
-        InputStream is;
-        try {
-            is = new FileInputStream(file.getAbsolutePath());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-            String line = "";
-            try {
-                reader.readLine();  //step over header
-                while ((line = reader.readLine()) != null) {
-                    String[] tokens = line.split(";");  // Split by ';'
-                    String azimuth = tokens[5];
-                    String hauteur = tokens[6];
-                    azimuth = azimuth.replace(",",".");  //convertir virgule en point
-                    hauteur = hauteur.replace(",",".");  //convertir virgule en point
-
-                    int haut;
-                    try {
-                        haut = (int) (Double.parseDouble(hauteur) + 0.5d);  //arrondi réel
-                    } catch (NumberFormatException e) {
-                        haut = -1;
-                    }
-                    dbAa.sql_query("INSERT INTO SUP_ANTENNE VALUES (NULL, '"+tokens[0]+"', '"+tokens[2]+"', '"+azimuth+"', "+haut+")");
-                }
-                reader.close();
-            } catch (IOException e) {
-                System.out.println("Erreur reading date on line " + line);
-                e.printStackTrace();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-*/
-
-
     private void sup_Antenne2db() {
         dbAa.delete("Analytica");  //éffacement des données SQL
 
@@ -729,42 +697,6 @@ public class A_Generateur_ANFR {
 
 
 
-
-    // méthode unique pour la recherche de la hauteur et des azimuths
-    // ancienne version avec 1 ligne par secteur dans SUP_ANTENNE
-    private void rechHautAz_old(String STA_NM_ANFR) {
-        azimuthsDg = "";
-        hauteurDg = -1;
-
-        int count = 0;
-        ArrayList<String> az = new ArrayList<>();    //arrayList qui contiendra tous les azimuths
-
-        try {
-            ResultSet rs = dbAa.queryRs("SELECT * FROM SUP_ANTENNE WHERE STA_NM_ANFR = '"+STA_NM_ANFR+"' AND TAE_ID != 17");    //exclure les FH (TAE_ID=17)
-            while (rs.next()) {
-                az.add(rs.getString(4));
-                hauteurDg = (int) (Double.parseDouble(rs.getString(5))+0.5d);
-            }
-            rs.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        //System.out.println("az="+az);
-        Collections.sort(az);   //trier par ordre croissant
-        List<String> deduped = az.stream().distinct().collect(Collectors.toList()); //supprimer les doublons
-        //System.out.println("az="+deduped);
-
-        for (String n : deduped) {
-            count++;
-            if (count != 1) {
-                azimuthsDg = azimuthsDg + ",";  //ajouter le séparateur seulement s'il y a plus de 1 donnée
-            }
-            azimuthsDg = azimuthsDg + n;
-        }
-        //System.out.println("azimuthS="+azimuthS);
-    }
-
     // méthode unique pour la recherche de la hauteur et des azimuths
     // nouvelle version avec 1 ligne par STA_ID dans SUP_ANTENNE et FH déjà éliminés
     private void rechHautAz(String STA_NM_ANFR) {
@@ -772,12 +704,14 @@ public class A_Generateur_ANFR {
         hauteurDg = -1;
 
         try {
-            ResultSet rs = dbAa.queryRs("SELECT AER_NB_AZIMUT, AER_NB_ALT_BAS FROM SUP_ANTENNE WHERE STA_NM_ANFR = '"+STA_NM_ANFR+"'");
+            Statement st = conTmp.createStatement();
+            ResultSet rs = st.executeQuery("SELECT AER_NB_AZIMUT, AER_NB_ALT_BAS FROM SUP_ANTENNE WHERE STA_NM_ANFR = '"+STA_NM_ANFR+"'");
             if (rs.next()) {
                 azimuthsDg= rs.getString(1);
                 hauteurDg = rs.getInt(2);
             }
             rs.close();
+            st.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -941,7 +875,8 @@ public class A_Generateur_ANFR {
     private void processHautAz(String plmn) {
         int nbSta = dbHt.numberRowsQ("SELECT COUNT(DISTINCT AnfrID) AS rowcount FROM '"+plmn+"'");
         int count=0;
-        ResultSet rs = dbHt.queryRs("SELECT DISTINCT AnfrID, sta_nm_anfr FROM '"+plmn+"'"); //une ligne par station
+        Statement st = conHt.createStatement(); //correction fuite mémoire 28/02/25
+        ResultSet rs = st.executeQuery("SELECT DISTINCT AnfrID, sta_nm_anfr FROM '"+plmn+"'"); //une ligne par station
         try {
             while (rs.next()) {
                 int anfrId = rs.getInt(1);
@@ -957,6 +892,7 @@ public class A_Generateur_ANFR {
                 count++;
             }
             rs.close();
+            st.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

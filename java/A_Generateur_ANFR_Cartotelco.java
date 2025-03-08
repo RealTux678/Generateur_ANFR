@@ -69,7 +69,7 @@ public class A_Generateur_ANFR_Cartotelco {
             readAnfr("20810", "SFR", false);
             readAnfr("20815", "FREE MOBILE", false);
             readAnfr("20820", "BOUYGUES TELECOM", false);
-            readAnfr("BPT", "SPT", true);
+            readAnfr("BPT", "BPT/SPT", true);
             readAnfr("DAU", "DAUPHIN TELECOM", true);
             readAnfr("DIGI", "DIGICEL", true);
             readAnfr("FREE", "FREE CARAIBES", true);

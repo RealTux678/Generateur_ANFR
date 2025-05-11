@@ -108,7 +108,7 @@ public class A_Generateur_ANFR {
                 readAnfr("20810", "SFR", false);
                 readAnfr("20815", "FREE MOBILE", false);
                 readAnfr("20820", "BOUYGUES TELECOM", false);
-                readAnfr("BPT", "BPT/SPT", true);
+                readAnfr("BPT", "SPT", true);
                 readAnfr("DAU", "DAUPHIN TELECOM", true);
                 readAnfr("DIGI", "DIGICEL", true);
                 readAnfr("FREE", "FREE CARAIBES", true);
@@ -118,7 +118,7 @@ public class A_Generateur_ANFR {
                 readAnfr("ONAT", "ONATI", true);
                 readAnfr("ORA", "ORANGE", true);
                 readAnfr("OUTR", "OUTREMER TELECOM", true);
-                readAnfr("PMT", "PMT/VODAFONE", true);
+                readAnfr("PMT", "PMT-VODAFONE", true);
                 readAnfr("SPM", "SPM TELECOM", true);
                 readAnfr("SRR", "SRR", true);
                 readAnfr("TLOI", "TELCO OI", true);

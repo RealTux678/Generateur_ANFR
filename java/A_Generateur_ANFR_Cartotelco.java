@@ -252,6 +252,7 @@ public class A_Generateur_ANFR_Cartotelco {
                         anfrAdresse1 = anfrAdresse1.replace("\"", "");
                         anfrAdresse1 = anfrAdresse1.trim();     //fix 8/02/26 certains champs "Adresse1" sont remplis d'espaces
                         anfrAdresse2 = anfrAdresse2.replace("\"", "");
+                        anfrAdresse2 = anfrAdresse2.trim();     //fix 8/02/26 certains champs "Adresse2" sont remplis d'espaces
                         anfrAdresseLieu = anfrAdresseLieu.replace("\"", "");
 
                         if (anfrAdresse2.length() > 1)

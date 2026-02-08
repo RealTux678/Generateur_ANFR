@@ -388,9 +388,11 @@ public class A_Generateur_ANFR {
 
                         //supprimer d'éventuels "
                         anfrAdresse1 = anfrAdresse1.replace("\"", "");
-                        anfrAdresse1 = anfrAdresse1.trim();     //fix 8/02/26 certains champs "Adresse1" sont remplis d'espaces
                         anfrAdresse2 = anfrAdresse2.replace("\"", "");
                         anfrAdresseLieu = anfrAdresseLieu.replace("\"", "");
+
+                        anfrAdresse1 = anfrAdresse1.trim();     //fix 8/02/26 certains champs "Adresse1" sont remplis d'espaces
+                        anfrAdresse2 = anfrAdresse2.trim();     //fix 8/02/26 certains champs "Adresse2" sont remplis d'espaces
 
                         if (anfrAdresse2.length() > 1)
                             anfrAdresse2 = anfrAdresse2 + " ";
